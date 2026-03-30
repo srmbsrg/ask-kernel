@@ -208,3 +208,53 @@ For a deep dive into *why* A.S.K is structured the way it is—why skills instea
 
 *A.S.K by T.A.M. — Agent Skills Kernel by Tesa and Murphy*
 *Last updated: 2026-03-30*
+
+---
+
+## Getting Started
+
+### Run the demo
+
+```bash
+git clone https://github.com/srmbsrg/ask-kernel
+cd ask-kernel
+python examples/demo_agent.py
+```
+
+The demo agent shows skill routing, input/output contracts, and chained workflows — no credentials required.
+
+### Load and run a skill
+
+```python
+from executor import execute_skill, list_skills
+
+# See all available skills
+list_skills()
+
+# Execute a skill
+result = execute_skill("foundation/telegram-notify", {
+    "message": "Hello from A.S.K",
+    "chat_id": "YOUR_CHAT_ID"
+})
+```
+
+### Command line
+
+```bash
+python executor.py --list
+python executor.py foundation/telegram-notify '{"message": "test", "chat_id": "123"}'
+```
+
+### Contributing a skill
+
+1. Create `{tier}/{skill-name}/SKILL.md` following the standard template
+2. Add a row to `ASK.md` registry
+3. Submit a pull request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines and the skill template.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE). Build freely. Skills compound.
