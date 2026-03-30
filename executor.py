@@ -24,7 +24,7 @@ import sys
 import os
 import json
 import re
-import importlib.util
+import subprocess
 import tempfile
 from pathlib import Path
 
@@ -51,14 +51,8 @@ def parse_skill(skill_file: Path) -> dict:
             "version": str,
             "tier": str,
             "dependencies": list,
-            "sections": {
-                "when_to_invoke": str,
-                "inputs": str,
-                "methodology": str,
-                "implementation": str,  # raw code block
-                "outputs": str,
-                "notes": str,
-            }
+            "implementation_code": str,
+            "sections": dict,
         }
 
     Why regex over a proper YAML parser:
@@ -83,10 +77,10 @@ def parse_skill(skill_file: Path) -> dict:
             val = val.strip()
             if val.startswith("[") and val.endswith("]"):
                 # Simple list parsing: [item1, item2]
-                items = [i.strip().strip("'"") for i in val[1:-1].split(",") if i.strip()]
+                items = [i.strip().strip("'\"") for i in val[1:-1].split(",") if i.strip()]
                 frontmatter[key] = items
             else:
-                frontmatter[key] = val.strip("\'\"")
+                frontmatter[key] = val.strip("'\"")
 
     # Extract implementation code block (first Python block)
     # Why: The implementation section contains the canonical executable logic.
@@ -138,12 +132,14 @@ def execute_skill(skill_path: str, inputs: dict) -> dict:
         return {
             "status": "no_implementation",
             "skill": skill_path,
-            "message": "This skill has no Python implementation block. "
-                       "It may be a definition-only skill (e.g., context files) "
-                       "or require a language-specific executor."
+            "message": (
+                "This skill has no Python implementation block. "
+                "It may be a definition-only skill (e.g., context files) "
+                "or require a language-specific executor."
+            )
         }
 
-    # Inject inputs into the execution namespace
+    # Inject inputs into the execution namespace.
     # Why not environment variables: inputs are structured data, not strings.
     # Passing them as namespace vars lets the skill code reference them directly.
     namespace = {
@@ -154,10 +150,10 @@ def execute_skill(skill_path: str, inputs: dict) -> dict:
 
     # Warning: exec() is powerful. In a multi-tenant or untrusted skill environment,
     # use subprocess with sandboxing instead.
-    exec(skill["implementation_code"], namespace)
+    exec(skill["implementation_code"], namespace)  # noqa: S102
 
-    # Skills that define a `run(inputs)` function get called with inputs.
-    # Skills that run top-level code produce a `result` variable.
+    # Skills that define a run(inputs) function get called with inputs.
+    # Skills that run top-level code produce a result variable.
     if "run" in namespace and callable(namespace["run"]):
         result = namespace["run"](inputs)
     elif "result" in namespace:
