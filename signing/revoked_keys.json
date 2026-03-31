@@ -1,0 +1,4 @@
+{
+  "_comment": "Revoked key fingerprints. Any skill signed by a key whose fingerprint appears here will be rejected by the executor, even if the signature is cryptographically valid. Add a fingerprint here immediately upon key compromise. The 'reason' and 'revoked_at' fields are informational.",
+  "revoked_fingerprints": []
+}
