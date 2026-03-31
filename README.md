@@ -190,6 +190,46 @@ For a deep dive into *why* A.S.K is structured the way it is—why skills instea
 
 ---
 
+## Security & Signing
+
+Every skill in A.S.K can be cryptographically signed by its author or organization. The executor can verify these signatures before running a skill, giving you provenance guarantees and tamper detection. This is code signing for AI agent skills.
+
+When signature enforcement is enabled, the executor will refuse to run any skill that is unsigned, tampered with, or signed by an untrusted key. When it is off (the default for local development), the executor warns about unsigned skills but proceeds.
+
+**Enforce signatures:**
+```bash
+# Per-invocation:
+python executor.py --verify-signatures foundation/github-push '{}'
+
+# Process-wide (recommended for production):
+ASK_VERIFY_SIGNATURES=1 python executor.py foundation/github-push '{}'
+```
+
+**Sign a skill you've written:**
+```bash
+# 1. Generate a keypair for your signer entity (once per entity):
+python signing/keygen.py --signer your-org --out ~/.ask/keys/your-org
+
+# 2. Register your public key in signing/trusted_signers.json
+
+# 3. Sign the skill:
+python signing/sign_skill.py \
+    --skill foundation/your-skill/SKILL.md \
+    --key ~/.ask/keys/your-org/private.pem \
+    --signer your-org
+```
+
+**Verify before running:**
+```bash
+python signing/verify_skill.py --skill foundation/github-push/SKILL.md
+```
+
+The signing system uses RSA-PSS with SHA-256. Signatures are embedded as a comment in the SKILL.md and stored in a sidecar `.sig` file alongside it. Revoked keys are tracked in `signing/revoked_keys.json`.
+
+For the complete design — key rotation, revocation, fork policy, and the future signed registry manifest — see [SIGNING.md](SIGNING.md).
+
+---
+
 ## Quick Reference
 
 | File | Purpose |
