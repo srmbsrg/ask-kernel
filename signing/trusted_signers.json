@@ -1,0 +1,8 @@
+{
+  "_comment": "Trusted public key registry for A.S.K skill signing. Each entry maps a signer name to their RSA public key (PEM). Add entries here to trust skills signed by that entity. Remove entries to revoke trust for all future verifications (use revoked_keys.json to invalidate already-deployed signatures). Run signing/keygen.py to generate a new keypair and get the entry format.",
+  "foundry-familiars": {
+    "description": "Foundry Familiars — core A.S.K skill authors (Tesa, Dark Factory, Scott Murphy). All skills shipped in the official ask-kernel repository are signed under this key.",
+    "pubkey": "PLACEHOLDER — run `python signing/keygen.py --signer foundry-familiars --out ~/.ask/keys/foundry-familiars` and paste the generated public key here",
+    "fingerprint": "PLACEHOLDER"
+  }
+}
