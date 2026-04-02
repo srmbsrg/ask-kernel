@@ -295,6 +295,16 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines and the skill templat
 
 ---
 
+## Get the Full Bundle
+
+The core registry is open source. The **A.S.K Production Bundle** includes the full tier-2 and tier-3 skill library (50+ skills), integration templates for Telegram, GitHub, Vercel, ElevenLabs, HeyGen, and Stripe, plus the Dark Factory deployment harness.
+
+**[$47 → Get the A.S.K Production Bundle](https://buy.stripe.com/3cI6oH7vPaLDevyc5BaMU00)**
+
+More context at [spookysoftwaresyndicate.com/ask](https://spookysoftwaresyndicate.com/ask).
+
+---
+
 ## License
 
 MIT — see [LICENSE](LICENSE). Build freely. Skills compound.
